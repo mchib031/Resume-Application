@@ -1,0 +1,60 @@
+.banner {
+    height: 400px;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .banner img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
+  
+  .about {
+    margin: 50px 0;
+  }
+  
+  .about h2 {
+    font-size: 2em;
+  }
+  
+  .about p {
+    font-size: 1.2em;
+    line-height: 1.5em;
+  }
+  
+  .social-links {
+    margin: 50px 0;
+  }
+  
+  .social-links h2 {
+    font-size: 2em;
+  }
+  
+  .social-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .social-links li {
+    margin: 10px 0;
+  }
+  
+  .social-links li a {
+    display: block;
+    background: #f2f2f2;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .social-links li a:hover {
+    background: #333;
+    color: #fff;
+  }
+  

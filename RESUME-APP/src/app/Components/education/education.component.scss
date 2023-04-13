@@ -1,0 +1,35 @@
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .card-deck {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 1rem 0;
+    
+    .card {
+      flex: 0 0 calc(33.33% - 1rem);
+      margin-bottom: 1rem;
+      
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
+      
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+      
+      .card-text {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+  
+  

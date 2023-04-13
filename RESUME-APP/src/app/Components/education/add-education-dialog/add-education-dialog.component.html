@@ -1,0 +1,68 @@
+<div class="mat-dialog-container">
+
+  <button class="close" mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>   
+  <h2 mat-dialog-title>Add Education</h2>
+  <mat-dialog-content>
+    <form #educationForm="ngForm" (ngSubmit)="onSubmit(educationForm)" novalidate>
+      <div class="form-group">
+        <mat-form-field>
+          <label for="degree">Degree:</label>
+          <input matInput required [(ngModel)]="degree" name="degree" #degreeInput="ngModel" id="degree">
+          <mat-error *ngIf="degreeInput.invalid && (degreeInput.dirty || degreeInput.touched)">
+            Please enter a valid degree.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field>
+          <label for="school">School:</label>
+          <input matInput required [(ngModel)]="school" name="school" #schoolInput="ngModel" id="school">
+          <mat-error *ngIf="schoolInput.invalid && (schoolInput.dirty || schoolInput.touched)">
+            Please enter a valid school.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field>
+          <label for="startDate">Start Date:</label>
+          <input matInput [matDatepicker]="startDatePicker" required [(ngModel)]="startDate" name="startDate"
+            #startDateInput="ngModel" id="startDate">
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+          <mat-error *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)">
+            Please enter a valid start date.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field>
+          <label for="endDate">End Date:</label>
+          <input matInput [matDatepicker]="endDatePicker" required [(ngModel)]="endDate" name="endDate"
+            #endDateInput="ngModel" id="endDate">
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          <mat-error *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)">
+            Please enter a valid end date.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field>
+          <label for="summary">Summary:</label>
+          <textarea matInput required [(ngModel)]="summary" name="summary" #summaryInput="ngModel" id="summary"></textarea>
+          <mat-error *ngIf="summaryInput.invalid && (summaryInput.dirty || summaryInput.touched)">
+            Please enter a valid summary.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit(educationForm)" [disabled]="!educationForm.valid">
+      Submit
+    </button>
+  </mat-dialog-actions>
+</div>

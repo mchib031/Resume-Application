@@ -1,0 +1,15 @@
+<h3>Education</h3>
+<div class="card-deck">
+  <div class="card" *ngFor="let education of educations">
+    <div class="card-body">
+      <h5 class="card-title">{{ education.degree }}</h5>
+      <p class="card-text">{{ education.school }}</p>
+      <p class="card-text">{{ education.startDate | date:'yyyy-MM-dd' }} - {{ education.endDate | date:'yyyy-MM-dd'}}</p>
+      <p class="card-text">{{ education.summary }}</p>
+    </div>
+  </div>
+</div>
+
+<button mat-raised-button (click)="addEducationDialog()">Add Education</button>
+
+
