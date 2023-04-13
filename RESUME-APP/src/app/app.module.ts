@@ -22,18 +22,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 
 
-
-
-
-
-const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'resume', component: ResumeComponent },
-  { path: 'resume/education', component: EducationComponent },
-  { path: 'resume/experience', component: ExperienceComponent },
-  { path: 'resume/skills', component: SkillsComponent }
-];
-
 @NgModule({
   
   declarations: [
@@ -58,7 +46,7 @@ const routes: Routes = [
     HttpClientModule,
     MatDialogModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(routes)
+    AppRoutingModule
   ],
   exports: [RouterModule,
     MatIconModule
