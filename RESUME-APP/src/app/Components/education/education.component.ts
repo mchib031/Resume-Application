@@ -39,9 +39,13 @@ export class EducationComponent implements OnInit {
 
 
   addEducationDialog(): void {
-    const dialogRef = this.dialog.open(AddEducationDialogComponent, {
-      width: '500px'
-    });
+    let dialogRef = this.dialog.open(
+      AddEducationDialogComponent,
+      {
+        width: '500px'
+      }
+    );
+    
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
