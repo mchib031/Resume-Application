@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEducationDialogComponent } from './add-education-dialog/add-education-dialog.component';
-import { EducationService } from '../../Services/education.service';
 import { Education } from '../../Models/education.model';
 import { DatePipe } from '@angular/common';
+import { EducationFactory } from 'src/app/Factories/education.factory';
 
 
 
@@ -13,6 +12,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './education.component.html',
   styleUrls: ['./education.component.scss']
 })
+
 export class EducationComponent implements OnInit {
   educations: Education[];
   degree!: string;
@@ -22,9 +22,9 @@ export class EducationComponent implements OnInit {
   summary!: string;
   id!: string;
   
-  
+  private educationFacade = this.educationFactory.create();
 
-  constructor(private educationService: EducationService, public dialog: MatDialog, private datePipe: DatePipe) {
+  constructor(private educationFactory: EducationFactory, public dialog: MatDialog, private datePipe: DatePipe) {
     this.educations = [];
    }
 
@@ -33,8 +33,7 @@ export class EducationComponent implements OnInit {
   }
 
   getEducation(): void {
-    this.educationService.getAllEducations()
-      .subscribe(educations => this.educations = educations);
+    this.educationFacade.educations.subscribe(educations => this.educations = educations);
   }
 
 
@@ -49,7 +48,7 @@ export class EducationComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.educations.push(result);
+        this.educationFacade.loadEducation();
         console.log('The dialog was closed');
       }
     });

@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EducationService } from '../../../Services/education.service';
 import { Education } from '../../../Models/education.model';
 import { NgForm } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { EducationFactory } from 'src/app/Factories/education.factory';
 
 
 @Component({
@@ -42,10 +42,12 @@ export class AddEducationDialogComponent implements OnInit {
   summary!: string;
   id!: string;
 
+  private educationFacade = this.educationFactory.create();
+
   constructor(
     public dialogRef: MatDialogRef<AddEducationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private educationService: EducationService)
+    private educationFactory: EducationFactory)
   { }
 
   ngOnInit(): void {
@@ -63,10 +65,10 @@ export class AddEducationDialogComponent implements OnInit {
     }
 
     const newEducation: Education = { degree, school, startDate, endDate, summary } as Education;
-    this.educationService.addEducation(newEducation)
-      .subscribe(education => {
-        this.dialogRef.close(education);
-      });
+
+      this.educationFacade.addEducation(newEducation);
+      this.dialogRef.close(newEducation);
+  
   }
 
 
