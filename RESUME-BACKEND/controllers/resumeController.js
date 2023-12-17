@@ -15,10 +15,6 @@ const {
 } = require('../services/utils/validation')
 
 const {
-    encrypt
-} = require('../services/modelValidation/ResumeValidation')
-
-const {
     updateOwnerHelper
 } = require('../services/modelHelpers/ResumeHelperService')
 
