@@ -7,7 +7,12 @@ const educationSchema = new Schema({
   school: String,
   startDate: Date,
   endDate: Date,
-  summary: String
+  summary: String,
+  resume: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Resume',
+    required: true
+  }
 });
 
 const Education = mongoose.model('Education', educationSchema);

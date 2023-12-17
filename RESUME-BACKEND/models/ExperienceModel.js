@@ -7,7 +7,12 @@ const experienceSchema = new Schema({
   position: String,
   startDate: Date,
   endDate: Date,
-  summary: String
+  summary: String,
+  resume: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Resume',
+    required: true
+  }
 });
 
 const Experience = mongoose.model('Experience', experienceSchema);

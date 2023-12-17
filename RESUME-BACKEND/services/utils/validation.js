@@ -1,3 +1,5 @@
+const MONGOOSE_IMMUTABLE_FIELDS = ['_id', 'createdAt', 'updatedAt', '__v']
+
 const filterParameters = (input) => {
     try {
         var filteredInput = Object.entries(input).filter(v => v[1])

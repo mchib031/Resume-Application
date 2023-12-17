@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const ResumeSchema = new Schema({
     owner: {
         type: mongoose.Types.ObjectId,
-        ref: 'Resume'
+        ref: 'User'
     },
     title: {
         type: String,
