@@ -11,7 +11,7 @@ const educationSchema = new Schema({
   resume: {
     type: mongoose.Types.ObjectId,
     ref: 'Resume',
-    required: true
+    required: false
   }
 });
 

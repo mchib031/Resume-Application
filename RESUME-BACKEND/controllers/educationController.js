@@ -75,57 +75,68 @@ const getEducationBySchool = async (req, res) => {
 
 const createEducation = async (req, res) => {
     try {
-        const restrictedKeys = []
-        const { token } = req.body
-        const { resumeid } = req.body
+        const restrictedKeys = [];
+        const { token } = req.body;
+        const { resumeid } = req.body;
 
         var params = {
             ...req.body,
+        };
+
+        delete params.token;
+        delete params.resumeid;
+
+        await authWithToken(token).then(async valid => {
+            if (!valid)
+                throw new Error('Invalid token');
+        });
+
+        if (resumeid) {
+            params.resume = resumeid;
+            var resume = await Resume.findById(resumeid);
+            if (!resume) {
+                throw new Error('Resume does not exist');
+            }
+            
+
+            if (resume.owner) {
+                if(!token)
+                    throw new Error('Token Not Provided')
+
+                var len = token.length,
+                    middle = Math.floor(len / 2);
+
+                var userid = token.substr(middle);
+
+                await authWithToken(token).then(async valid => {
+                    if (!valid)
+                        throw new Error('Invalid token');
+
+                    var user = await User.findById(userid);
+
+                    if (!user._id.equals(resume.owner))
+                        throw new Error('User does not have permission to update this Resume');
+                });
+            }
         }
 
-        delete params.token
-        delete params.resumeid
+        validateRequestBody(Education.schema.paths, params, restrictedKeys);
 
-        params.resume = resumeid
-
-        validateRequestBody(Education.schema.paths, params, restrictedKeys)
-
-        var resume = await Resume.findById(resumeid)
-
-        if (!resume)
-            throw new Error('Resume does not exist')
-
-        if (resume.owner) {
-            if (!token)
-                throw new Error('Token not provided')
-
-            var len = token.length,
-                middle = Math.floor(len / 2)
-
-            var userid = token.substr(middle)
-
-            await authWithToken(token).then(async valid => {
-                if (!valid)
-                    throw new Error('Invalid token')
-
-                var user = await User.findById(userid)
-
-                if (!user._id.equals(resume.owner))
-                    throw new Error('User does not have permission to update this Resume')
-            })
+        if (resumeid) {
+            await Education.create(params).then(async education => {
+                resume.educations.push(education._id);
+                await resume.save();
+                return res.status(200).json({ education: education, resume: resume, msg: 'Education successfully created' });
+            });
+        } else {
+            const education = await Education.create(params);
+            return res.status(200).json({ education: education, msg: 'Education successfully created' });
         }
-
-        return await Education.create(params).then(async education => {
-            resume.educations.push(education._id)
-
-            await resume.save()
-
-            return res.status(200).json({ education: education, resume: resume, msg: 'Education successfully created' })
-        })
     } catch (err) {
-        return res.status(400).json({ error: err.message })
+        return res.status(400).json({ error: err.message });
     }
 }
+
 
 const deleteEducation = async (req, res) => {
     try {
@@ -147,18 +158,19 @@ const deleteEducation = async (req, res) => {
 
             var resume = await Resume.findById(education.resume)
 
-            if (resume.owner) {
-                var user = await User.findById(userid)
-
-                if (!user._id.equals(resume.owner))
-                    throw new Error('User does not have permission to delete this Education')
+            if (resume){
+                if (resume.owner) {
+                    var user = await User.findById(userid)
+    
+                    if (!user._id.equals(resume.owner))
+                        throw new Error('User does not have permission to delete this Education')
+    
+                    resume.educations = resume.educations.filter(id => !id.equals(education._id))
+                    await resume.save()
+                }
             }
-
-            resume.educations = resume.educations.filter(id => !id.equals(education._id))
-
-            await resume.save()
+            
             await Education.findOneAndDelete({ _id: education._id })
-
             return res.status(200).json({ msg: 'Education has been deleted' })
         })
     } catch (err) {
@@ -172,9 +184,13 @@ const updateEducation = async (req, res) => {
         const { token } = req.params
         const { id } = req.params
 
+        const { resumeid } = req.body
+
         const params = {
             ...req.body
         }
+
+        delete params.resumeid;
 
         validateRequestBody(Education.schema.paths, params, restrictedKeys)
 
@@ -190,14 +206,46 @@ const updateEducation = async (req, res) => {
 
             if (!education)
                 throw new Error('Education does not exist')
-
-            var resume = await Resume.findById(education.resume)
             
-            if (resume.owner) {
-                var user = await User.findById(userid)
+            if (resumeid) {
+                params.resume = resumeid;
+                var resume = await Resume.findById(resumeid);
+                if (!resume) {
+                    throw new Error('Resume does not exist');
+                }
+                    
+                if (resume.owner) {
+                    var len = token.length,
+                        middle = Math.floor(len / 2);
+        
+                    var userid = token.substr(middle);
+        
+                    await authWithToken(token).then(async valid => {
+                        if (!valid)
+                            throw new Error('Invalid token');
+        
+                        var user = await User.findById(userid);
+        
+                        if (!user._id.equals(resume.owner))
+                            throw new Error('User does not have permission to update this Resume');
+                    });
+                }
+                await Education.findByIdAndUpdate(id, params, { runValidators: true, new: true }).then(async education => {
+                    resume.educations.push(education._id);
+                    await resume.save();
+                    return res.status(200).json({ education: education, resume:resume, msg: 'Education has been updated' })
+                })
+            }
+            
+            var resume = await Resume.findById(education.resume)
 
-                if (!user._id.equals(resume.owner))
-                    throw new Error('User does not have permission to update this Education')
+            if (resume){
+                if (resume.owner) {
+                    var user = await User.findById(userid)
+    
+                    if (!user._id.equals(resume.owner))
+                        throw new Error('User does not have permission to update this Education')
+                }
             }
 
             return await Education.findByIdAndUpdate(id, params, { runValidators: true, new: true }).then(education => {
